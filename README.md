@@ -81,11 +81,10 @@ Following features are supported by the application.
  
 #### Operation
 * Operation is the fundamental class for all operations done by the application.
-* Operation is an **abstract class** with an abstract process() method.
+* Operation is an **abstract class** with an abstract process() method. The method accepts and returns an object of 'Data'. The data object travels between the different operations.
 * All operations such as _decompression, decryption, decoding, parsing, and printing will extend_ the Operation class.
 * Pattern - **Chain of responsibility**.
 * The class also has a ‘next’ reference for the next operation in line, a ‘processNext()’ method which will be called by the running operation to trigger the next operation.
- 
 * An abstract method ‘setStatus()’ will be defined by all concrete operation classes which sets the status of the operation completed. 
 * Status will be one of, DECOMPRESSED, DECRYPTED, DECODED, PARSED, PRINTED, FAILED, SUSPENDED.
  
