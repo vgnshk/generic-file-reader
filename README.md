@@ -51,6 +51,11 @@ Following features are supported by the application.
  
  
 ## Classes and Design
+#### Data
+* Data is the encapsulation of the file data that is being processed.
+* The class has a ‘data’ field that will store the result of the data after every operation such as decompression, decryption, etc.
+* The class also has a ‘status’ enum which specifies the status of the user request. At the end of each operation, the status is set accordingly.
+
 #### Application
 * The application opens a std_in and waits for the user to input the file read command along with properties.
 * The input gets parsed and an object of UserInput class is created.
