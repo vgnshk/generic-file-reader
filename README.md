@@ -115,7 +115,8 @@ Following features are supported by the application.
 #### Builder 
 * The builder pattern helps in building the required operations object purely based on the user input. 
 * If a particular operation is not required for the user input, then the respective operation class will not be instantiated / used for the request.
-* When a **new type of operation** is added for support in the future, we can easily integrate with the software by **updating the builder** with appropriate methods, and changes to the build order. The existing users of the builder will not be affected in such cases, and users can seamlessly start using the newly added operations.
+* When a **new type of operation** is added for support in the future, we can easily integrate with the software by **updating the builder** with appropriate methods, and changes to the build order. The existing users of the builder will not be affected in such cases, and users can seamlessly start using the newly added operations. 
+* The builder is **thread-safe** as a new builder instance is created for each user request.
  
 #### Chain of responsibility
 * Chain of responsibility pattern helps in creating a chain of Operation objects based on the user input.
@@ -124,7 +125,9 @@ Following features are supported by the application.
 * Each operation will update the processed data in the object and pass it around for the subsequent operations to consume and process. Upon completion, each operation updates the status in the data object.
 * When a **new type of operation** is added for support in the future, we only have to **create a new concrete implementation** extending the Operation and define the process() and setStatus() methods.
 * The implementation details like the libraries used for the actual operation will be known only to that particular operation subclass, and is independent of other operations behavior. Thus, each operation implementation can be individually maintained.
-* **Unit testing** the concrete classes is simple. The chaining of different classes can be unit tested by mocking the objects.
+* **Unit testing** the concrete classes is simple. The chaining of different classes can be unit tested by mocking the objects. 
+* We cannot make the individual operations as _Singleton_ because the operations contain the state of the next operation.
+* All Operation concrete classes are **thread-safe**, because there is no shared state between two threads.
  
 #### Factory
 * The OperationFactory is solely responsible for the **instantiation** of respective operation classes based on the type provided by the user.
@@ -133,7 +136,8 @@ Following features are supported by the application.
 * For simplicity, a single factory is created to do all the object creations.
 * Abstract Factory? We can also make this an _Abstract Factory_ and create individual factories for each operation type, but that will increase the maintenance.
 * Dependency Injection? The factory can also be replaced by _Dependency Injection_, so that the builder is independent of the factory, and the required concrete class objects will be injected by an injector. But that will again increase the cost of **maintenance**. One advantage of Dependency Injection will be unit testing the builder, but that is already enabled using mocks.
-* The factory methods are made **static**, so we can easily mock the methods during unit testing the users of the factory, in this case, the OperationsBuilder. 
+* The factory methods are made **static**, so we can easily mock the methods during unit testing the users of the factory, in this case, the OperationsBuilder.  
+* This factory is **thread-safe** as the static methods have no shared state between two threads.
  
 ## Assumptions
 * Validation - An InvalidUserInputException is created when the user input is invalid. The error message is displayed in the command prompt.
