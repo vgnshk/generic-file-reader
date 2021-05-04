@@ -4,37 +4,37 @@ Generic file based reader that loads components based on user input. Supports de
 ## How it works
 Users can input the command to read a file along with the properties of the file. See sample usages below.
 
-### Usage 1
+#### Usage 1
 ```Python
 >> readCSVRecord  file=foo.zzz  compression=gzip encryption=AES128
 ```
 File will be decompressed, decrypted, and parsed as CSV. Data will be displayed in std_out.
  
-### Usage 2
+#### Usage 2
 ```bash
 >> readCSVRecord  file=foo.zzz  compression=gzip 
 ```
 File will be decompressed, and parsed as CSV. Data will be displayed in std_out.
  
-### Usage 3
+#### Usage 3
 ```bash
 >> readCSVRecord  file=foo.zzz  encryption=AES128
 ```
 File will be decrypted, and parsed as CSV. Data will be displayed in std_out.
  
-### Usage 4
+#### Usage 4
 ```bash
 >> readCSVRecord  file=foo.zzz  
 ```
 File will be parsed as CSV. Data will be displayed in std_out.
  
-### Usage 5
+#### Usage 5
 ```bash
 >> readXMLRecord  file=foo.zzz  
 ```
 File will be parsed as XML. Data will be displayed in std_out.
  
-### Usage 6
+#### Usage 6
 ```bash
 >> readCSVRecord  file=foo.zzz  encryption=GPG output=out.csv
 ```
@@ -51,18 +51,18 @@ Following features are supported by the application.
  
  
 ## Classes and Design
-### Application
+#### Application
 * The application opens a std_in and waits for the user to input the file read command along with properties.
 * The input gets parsed and an object of UserInput class is created.
  
-### UserInputHandler
+#### UserInputHandler
 * The UserInput object created by the application is provided to a handler to process.
 * This class does the **defaulting** of operation types if not specified by the users.
   * Default encoding = UTF-8
   * Default file type = CSV
   * Default output = STD_OUT
  
-### UserInputValidator
+#### UserInputValidator
 * The handler uses a UserInputValidator to validate the user input.
 * The validator validates the following.
   * Valid filename
@@ -74,7 +74,7 @@ Following features are supported by the application.
   * Supported output option
 * If any of the above validation fails, an InvalidUserInputException is thrown. On successful validation, the input is passed for further processing.
  
-### Operation
+#### Operation
 * Operation is the fundamental class for all operations done by the application.
 * Operation is an **abstract class** with an abstract process() method.
 * All operations such as _decompression, decryption, decoding, parsing, and printing will extend_ the Operation class.
@@ -84,7 +84,7 @@ Following features are supported by the application.
 * An abstract method ‘setStatus()’ will be defined by all concrete operation classes which sets the status of the operation completed. 
 * Status will be one of, DECOMPRESSED, DECRYPTED, DECODED, PARSED, PRINTED, FAILED, SUSPENDED.
  
-### OperationsFactory
+#### OperationsFactory
 * A factory class OperationsFactory creates the concrete class objects of Operation for a given property type.
 * The class has the following **static** methods.
   * getDecompressionOperation(enum CompressionType): Operation
@@ -95,7 +95,7 @@ Following features are supported by the application.
 * The enumerations for the different types of operations will have the supported compression, encryption, encoding, file, and print types.
 * The caller of the static methods will provide a supported type of an operation to get an object of the respective operation.
  
-### OperationsBuilder
+#### OperationsBuilder
 * A builder class OperationsBuilder builds the chain of operations based on the user input.
 * The class has the following methods.
   * withCompression(enum CompressionType): OperationsBuilder
@@ -108,12 +108,12 @@ Following features are supported by the application.
 * The individual ‘with’ methods help build the builder with appropriate operation objects, and the build() method creates the chain of operations, and returns the reference of the first operation to the caller.
   
 ## Design Justification
-### Builder 
+#### Builder 
 * The builder pattern helps in building the required operations object purely based on the user input. 
 * If a particular operation is not required for the user input, then the respective operation class will not be instantiated / used for the request.
 * When a **new type of operation** is added for support in the future, we can easily integrate with the software by **updating the builder** with appropriate methods, and changes to the build order. The existing users of the builder will not be affected in such cases, and users can seamlessly start using the newly added operations.
  
-### Chain of responsibility
+#### Chain of responsibility
 * Chain of responsibility pattern helps in creating a chain of Operation objects based on the user input.
 * Only the required operations can be created and chained for a sequence of operations.
 * All the operations use a ‘Data’ object which stores the data that is getting processed, along with the status of the operation.
@@ -122,7 +122,7 @@ Following features are supported by the application.
 * The implementation details like the libraries used for the actual operation will be known only to that particular operation subclass, and is independent of other operations behavior. Thus, each operation implementation can be individually maintained.
 * **Unit testing** the concrete classes is simple. The chaining of different classes can be unit tested by mocking the objects.
  
-### Factory
+#### Factory
 * The OperationFactory is solely responsible for the **instantiation** of respective operation classes based on the type provided by the user.
 * By abstracting the concrete class instantiations from the users, we can easily maintain the implementations.
 * New operation types in the future can be added by updating the factory with the respective class details.
